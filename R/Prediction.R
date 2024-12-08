@@ -1,5 +1,7 @@
 library(dplyr)
 library(scales)
+library(reticulate)
+library(keras)
 
 nflhistats <- readRDS("nflhistats24.rds")
 
@@ -18,16 +20,22 @@ x_scaled <- as.data.frame(lapply(x_scaled, function(x_scaled) log(x_scaled + 1))
 
 x_scaled <- x_scaled[complete.cases(x_scaled), ]
 
-# Combine GLM predictions with the rest of the features
-x_combined <- cbind(x_scaled, glm_preds = glm_preds)
+load(file = "glm_model.RData")
 
-#X_test <- array(as.numeric(x_combined))
+# Generate GLM predictions
+glm_preds <- predict(model, newdata = x_scaled, type = "response")
+
+x_combined <- cbind(x_scaled, glm_preds = glm_preds)
 
 X_test <- as.matrix(colMeans(x_combined, na.rm = TRUE))
 
 X_test <- t(X_test)
 
-score <- model %>% predict(X_test)
+use_condaenv("tf_env", conda = "E:/New folder/Anaconda/condabin/conda")
+
+loaded_model <- load_model_hdf5("my_model.h5")
+
+score <- loaded_model %>% predict(X_test)
 print(score)
 
 
