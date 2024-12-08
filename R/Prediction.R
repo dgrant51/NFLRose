@@ -5,7 +5,7 @@ library(keras)
 
 nflhistats <- readRDS("nflhistats24.rds")
 
-nflhistats <- nflhistats %>% filter(Team == team)
+nflhistats <- nflhistats %>% filter(Team == team_number)
 
 # Extract all other columns except X5 as independent variables (x)
 x <- nflhistats %>% select(5:11,14:20,22)
