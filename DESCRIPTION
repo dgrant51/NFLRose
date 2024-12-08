@@ -1,0 +1,10 @@
+Package: ProjectRose
+Type: Package
+Title: NFL Prediction
+Version: 0.1.0
+Author: David Grant
+Maintainer: dgrant_23@yahoo.com
+Description: Predicts NFL games using ML
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
