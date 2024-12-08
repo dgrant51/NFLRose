@@ -41,23 +41,23 @@ server <- function(input, output) {
         # Capture the selected team value (numeric value)
         team_number <- input$team  # Numeric value of the selected team
 
-        # Check if the team number is valid (between 1 and 32)
-        if (team_number < 1 || team_number > 32) {
-          stop("Invalid team number")
-        }
-
-        # Save the team number to the global environment for use in external scripts
-        assign("team_number", team_number, envir = .GlobalEnv)  # Assign to global environment
-
-        # Map the team number to the team name (mapping)
+        # Map team number to team name (team_name)
         team_names <- c('ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', 'DEN',
                         'DET', 'GNB', 'HOU', 'IND', 'JAX', 'KAN', 'LAC', 'LAR', 'LVR', 'MIA',
                         'MIN', 'NWE', 'NOR', 'NYG', 'NYJ', 'PHI', 'PIT', 'SEA', 'SFO', 'TAM',
                         'TEN', 'WAS')
-        team_name <- team_names[team_number]  # Get the team name based on selected team number
 
-        # Save the team name to the global environment for use in external scripts
-        assign("team_name", team_name, envir = .GlobalEnv)  # Assign team name to global env
+        # Get the team name based on the numeric value (team_number)
+        team_name <- team_names[team_number]
+
+        # Validate if the team_number is within valid range
+        if (team_number < 1 || team_number > 32) {
+          stop("Invalid team number")  # Stop if the team number is out of range
+        }
+
+        # Save team number and name to the global environment
+        assign("team_number", team_number, envir = .GlobalEnv)  # Save to global environment
+        assign("team_name", team_name, envir = .GlobalEnv)  # Save team name to global environment
 
         # Download and source the prediction script from GitHub
         download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/refs/heads/RforRose/R/Prediction.R", destfile = "Prediction.R")
@@ -85,3 +85,4 @@ server <- function(input, output) {
 
 # Run the Shiny app
 shinyApp(ui = ui, server = server)
+
