@@ -3,7 +3,7 @@ library(scales)
 
 nflhistats <- readRDS("nflhistats24.rds")
 
-nflhistats <- nflhistats %>% filter(Team == 1)
+nflhistats <- nflhistats %>% filter(Team == team)
 
 # Extract all other columns except X5 as independent variables (x)
 x <- nflhistats %>% select(5:11,14:20,22)

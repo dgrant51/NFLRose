@@ -1,100 +1,44 @@
-# Load shiny library
-library(shiny)
-
-# Define the UI
-ui <- fluidPage(
-  # Create multiple buttons in the UI
-  actionButton("r1", "Update Model"),
-
-  selectInput("team", "Choose a Team:",
-              choices = c('ARI' = 1, 'ATL' = 2, 'BAL' = 3, 'BUF' = 4, 'CAR' = 5, 'CHI' = 6,
-                          'CIN' = 7, 'CLE' = 8, 'DAL' = 9, 'DEN' = 10, 'DET' = 11, 'GNB' = 12,
-                          'HOU' = 13, 'IND' = 14, 'JAX' = 15, 'KAN' = 16, 'LAC' = 17,
-                          'LAR' = 18, 'LVR' = 19, 'MIA' = 20, 'MIN' = 21, 'NWE' = 22,
-                          'NOR' = 23, 'NYG' = 24, 'NYJ' = 25, 'PHI' = 26, 'PIT' = 27,
-                          'SEA' = 28, 'SFO' = 29, 'TAM' = 30, 'TEN' = 31, 'WAS' = 32),
-              selected = "ARI"),
-
-  actionButton("r2", "Predict"),
-
-  # Display result text
-  textOutput("result")
-)
-
-# Define the server function
 server <- function(input, output) {
-
-  # Define an event that listens for the first button press (Run Script 1)
-  observeEvent(input$r1, {
-    # Show the progress bar
-    withProgress(message = 'Running Script 1...', value = 0, {
-      tryCatch({
-        # Download the scripts from GitHub (using raw GitHub URLs)
-        download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/3b81f9d1eb63de81385fb799a90e582c771a82ff/R/2024Scrape.R", destfile = "2024Scrape.R")
-        incProgress(5/100)  # Increment the progress bar
-
-        download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/3b81f9d1eb63de81385fb799a90e582c771a82ff/R/2024update.R", destfile = "2024update.R")
-        incProgress(10/100)  # Increment the progress bar
-
-        download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/3b81f9d1eb63de81385fb799a90e582c771a82ff/R/Log24.R", destfile = "2024log.R")
-        incProgress(15/100)  # Increment the progress bar
-
-        download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/3b81f9d1eb63de81385fb799a90e582c771a82ff/R/StatsCleanup24.R", destfile = "2024clean.R")
-        incProgress(20/100)  # Increment the progress bar
-
-        # Source the downloaded scripts
-        source("2024Scrape.R")
-        incProgress(40/100)  # Increment the progress bar
-
-        source("2024clean.R")
-        incProgress(50/100)  # Increment the progress bar
-
-        source("2024log.R")
-        incProgress(70/100)  # Increment the progress bar
-
-        source("2024update.R")
-        incProgress(90/100)  # Increment the progress bar
-
-        # Set result message
-        output$result <- renderText({
-          "Scripts executed successfully!"
-        })
-
-      }, error = function(e) {
-        # Handle error and set result message
-        output$result <- renderText({
-          paste("Error in Script 1:", e$message)
-        })
-      })
-    })
-  })
 
   # Define an event that listens for the second button press (Run Script 2)
   observeEvent(input$r2, {
-    tryCatch({
-      # Run another script by sourcing it (this can be a different script)
-      # Replace with the script you want to run
-      team <- input$team
-      download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/refs/heads/RforRose/R/Prediction.R", destfile = "Prediction.R")
-      source("Prediction.R")
+    withProgress(message = 'Running Prediction...', value = 0, {
+      tryCatch({
+        # Capture the selected team value
+        team_number <- input$team  # Numeric value of the selected team
 
-      # Set result message
-      output$result <- renderText({
+        # Map the team number to the team name (mapping)
+        team_names <- c('ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', 'DEN',
+                        'DET', 'GNB', 'HOU', 'IND', 'JAX', 'KAN', 'LAC', 'LAR', 'LVR', 'MIA',
+                        'MIN', 'NWE', 'NOR', 'NYG', 'NYJ', 'PHI', 'PIT', 'SEA', 'SFO', 'TAM',
+                        'TEN', 'WAS')
 
-        "Script 2 executed successfully!"
+        # Ensure 'team_name' is a character string
+        team_name <- as.character(team_names[team_number])  # Get the team name based on selected team number
 
-      })
-    }, error = function(e) {
-      # Handle error for Script 2
-      output$result <- renderText({
-        paste("Error in Script 2:", e$message)
+        # Save the team name to the global environment for use in external scripts
+        assign("team_name", team_name, envir = .GlobalEnv)
+
+        # Download and source the prediction script from GitHub
+        download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/refs/heads/RforRose/R/Prediction.R", destfile = "Prediction.R")
+        incProgress(30/100)
+
+        source("Prediction.R")  # Now Prediction.R can access 'team_name' as a string
+
+        incProgress(60/100)
+
+        # After prediction script execution, show success message
+        output$result <- renderText({
+          paste("Prediction for team", team_name, "executed successfully!")
+        })
+
+      }, error = function(e) {
+        # Handle error for Script 2
+        output$result <- renderText({
+          paste("Error in Script 2:", e$message)
+        })
       })
     })
   })
 }
-
-# Run the shiny app
-shinyApp(ui = ui, server = server)
-
-
 
