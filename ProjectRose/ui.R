@@ -50,11 +50,6 @@ server <- function(input, output) {
         # Get the team name based on the numeric value (team_number)
         team_name <- team_names[team_number]
 
-        # Validate if the team_number is within valid range
-        if (team_number < 1 || team_number > 32) {
-          stop("Invalid team number")  # Stop if the team number is out of range
-        }
-
         # Save team number and name to the global environment
         assign("team_number", team_number, envir = .GlobalEnv)  # Save to global environment
         assign("team_name", team_name, envir = .GlobalEnv)  # Save team name to global environment

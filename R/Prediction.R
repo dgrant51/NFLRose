@@ -33,7 +33,7 @@ X_test <- t(X_test)
 
 use_condaenv("tf_env", conda = "E:/New folder/Anaconda/condabin/conda")
 
-loaded_model <- load_model_hdf5("my_model.h5")
+loaded_model <- load_model_hdf5("updated_model.h5")
 
 score <- loaded_model %>% predict(X_test)
 print(score)
