@@ -5,9 +5,19 @@ library(shiny)
 ui <- fluidPage(
   # Create multiple buttons in the UI
   actionButton("r1", "Update Model"),
+
+  selectInput("team", "Choose a Team:",
+              choices = c('ARI' = 1, 'ATL' = 2, 'BAL' = 3, 'BUF' = 4, 'CAR' = 5, 'CHI' = 6,
+                          'CIN' = 7, 'CLE' = 8, 'DAL' = 9, 'DEN' = 10, 'DET' = 11, 'GNB' = 12,
+                          'HOU' = 13, 'IND' = 14, 'JAX' = 15, 'KAN' = 16, 'LAC' = 17,
+                          'LAR' = 18, 'LVR' = 19, 'MIA' = 20, 'MIN' = 21, 'NWE' = 22,
+                          'NOR' = 23, 'NYG' = 24, 'NYJ' = 25, 'PHI' = 26, 'PIT' = 27,
+                          'SEA' = 28, 'SFO' = 29, 'TAM' = 30, 'TEN' = 31, 'WAS' = 32),
+              selected = "ARI"),
+
   actionButton("r2", "Predict"),
 
-  # Output to display results
+  # Display result text
   textOutput("result")
 )
 
@@ -64,11 +74,15 @@ server <- function(input, output) {
     tryCatch({
       # Run another script by sourcing it (this can be a different script)
       # Replace with the script you want to run
-      source("path/to/your/script2.R")
+      team <- input$team
+      download.file("https://raw.githubusercontent.com/dgrant51/NFLRose/refs/heads/RforRose/R/Prediction.R", destfile = "Prediction.R")
+      source("Prediction.R")
 
       # Set result message
       output$result <- renderText({
+
         "Script 2 executed successfully!"
+
       })
     }, error = function(e) {
       # Handle error for Script 2
