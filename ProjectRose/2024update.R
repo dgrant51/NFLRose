@@ -35,6 +35,12 @@ train_data <- combo
 X_new <- as.matrix(train_data[, -1])  # Exclude target variable (y)
 y_new <- train_data$y
 
+X_test <- array(as.numeric(X_test), dim = c(nrow(X_test), 16))
+
+X_test <- as.matrix(colMeans(x_combined, na.rm = TRUE))
+
+X_test <- t(X_test)
+
 use_condaenv("tf_env", conda = "E:/New folder/Anaconda/condabin/conda")
 
 loaded_model <- load_model_hdf5("my_model.h5")
