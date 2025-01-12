@@ -2,12 +2,19 @@ library(shiny)
 
 # Define the UI
 ui <- fluidPage(
-
   # Title
   titlePanel("NFL Team Prediction"),
 
-  # Layout for the UI elements
+  # Layout for the UI elements (swapping the positions of the sidebarPanel and mainPanel)
   sidebarLayout(
+    mainPanel(
+      # Progress bar and result output
+      verbatimTextOutput("result"),
+
+      # Label for displaying the string of a variable
+      textOutput("team_label")
+    ),
+
     sidebarPanel(
       # Dropdown for team selection
       selectInput("team",
@@ -22,11 +29,6 @@ ui <- fluidPage(
 
       # Action button to trigger prediction
       actionButton("r2", "Predict", class = "btn-primary")
-    ),
-
-    mainPanel(
-      # Progress bar and result output
-      verbatimTextOutput("result")
     )
   )
 )
@@ -34,12 +36,15 @@ ui <- fluidPage(
 # Define the server logic
 server <- function(input, output) {
 
-  # Define an event that listens for the second button press (Run Script 2)
+  # Define an event that listens for the second button press (Run Prediction)
   observeEvent(input$r2, {
     withProgress(message = 'Running Prediction...', value = 0, {
       tryCatch({
         # Capture the selected team value (numeric value)
         team_number <- input$team  # Numeric value of the selected team
+
+        # Print team_number for debugging
+        print(paste("Selected team number:", team_number))
 
         # Map team number to team name (team_name)
         team_names <- c('ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', 'DEN',
@@ -66,6 +71,7 @@ server <- function(input, output) {
         # After prediction script execution, show success message
         output$result <- renderText({
           paste("Prediction for team", team_name, "executed successfully!")
+          paste("Chance of a win:", score)
         })
 
       }, error = function(e) {
