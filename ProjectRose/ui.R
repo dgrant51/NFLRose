@@ -6,21 +6,19 @@ ui <- fluidPage(
   titlePanel("NFL Team Prediction"),
 
   # Layout for the UI elements (swapping the positions of the sidebarPanel and mainPanel)
-  sidebarLayout(
-    mainPanel(
-      # Progress bar and result output
-      verbatimTextOutput("result"),
+  sidebarPanel(
+    # Progress bar and result output
+    verbatimTextOutput("result"),
 
-      # Label for displaying the string of a variable
-      textOutput("team_label")
-    ),
+    # Label for displaying the string of a variable
+    textOutput("team_label")
+  ),
 
-    sidebarPanel(
-      # Dropdown for team selection
-      selectInput("team",
-                  "Choose a Team:",
-                  choices = c('ARI' = 1, 'ATL' = 2, 'BAL' = 3, 'BUF' = 4, 'CAR' = 5, 'CHI' = 6,
-                              'CIN' = 7, 'CLE' = 8, 'DAL' = 9, 'DEN' = 10, 'DET' = 11, 'GNB' = 12,
+  mainPanel(
+    # Dropdown for team selection
+    selectInput("team",
+                "Choose a Team:",
+                choices = c('ARI' = 1, 'ATL' = 2, 'BAL' = 3, 'BUF' = 4, 'CAR' = 5, 'CHI' = 6,                              'CIN' = 7, 'CLE' = 8, 'DAL' = 9, 'DEN' = 10, 'DET' = 11, 'GNB' = 12,
                               'HOU' = 13, 'IND' = 14, 'JAX' = 15, 'KAN' = 16, 'LAC' = 17,
                               'LAR' = 18, 'LVR' = 19, 'MIA' = 20, 'MIN' = 21, 'NWE' = 22,
                               'NOR' = 23, 'NYG' = 24, 'NYJ' = 25, 'PHI' = 26, 'PIT' = 27,
@@ -28,10 +26,10 @@ ui <- fluidPage(
                   selected = 1),  # Default selected team is 'ARI'
 
       # Action button to trigger prediction
-      actionButton("r2", "Predict", class = "btn-primary")
-    )
+    actionButton("r2", "Predict", class = "btn-primary")
   )
 )
+
 
 # Define the server logic
 server <- function(input, output) {
