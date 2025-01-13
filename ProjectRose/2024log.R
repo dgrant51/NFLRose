@@ -43,8 +43,6 @@ save(model, file = "glm_model.RData")
 # Generate GLM predictions
 glm_preds <- predict(model, newdata = x_scaled, type = "response")
 
-saveRDS(glm_preds, "glm_preds.rds")
-
 # You can convert them to binary predictions if needed
 glm_binary_preds <- ifelse(glm_preds > 0.5, 1, 0)
 
@@ -68,3 +66,5 @@ print(conf_matrix)
 roc_curve <- roc(actual_binary, glm_binary_preds)
 plot(roc_curve, main = "ROC Curve")
 auc(roc_curve)  # This will give you the AUC (Area Under the Curve)
+
+saveRDS(glm_preds, "glm_preds.rds")
