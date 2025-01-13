@@ -43,6 +43,8 @@ save(model, file = "glm_model.RData")
 # Generate GLM predictions
 glm_preds <- predict(model, newdata = x_scaled, type = "response")
 
+saveRDS(glm_preds, "glm_preds.rds")
+
 # You can convert them to binary predictions if needed
 glm_binary_preds <- ifelse(glm_preds > 0.5, 1, 0)
 

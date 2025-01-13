@@ -4,7 +4,7 @@ library(scales)
 library(reticulate)
 
 # Load the data
-nflhistats <- readRDS("D:/R code/NFL Prediction/nflhistats24.rds")
+nflhistats <- readRDS("nflhistats24.rds")
 
 # Extract X5 as the dependent variable (y)
 y <- nflhistats$Outcome
